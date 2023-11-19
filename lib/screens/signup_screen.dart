@@ -1,24 +1,32 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:instragram_clone/firebase_options.dart';
+import 'package:instragram_clone/resources/auth_method.dart';
 import 'package:instragram_clone/utils/colors.dart';
 import 'package:instragram_clone/widgets/text_field_input.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _bioController = TextEditingController();
+  final _usernameController = TextEditingController();
+
 
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _bioController.dispose();
+    _usernameController.dispose();
   }
 
   @override
@@ -40,6 +48,34 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 64,
             ),
             const SizedBox(height: 64),
+
+            // circular widget to accept and show our selected file
+            Stack(
+              children: [
+                const CircleAvatar(
+                  radius: 64,
+                  backgroundImage: NetworkImage(
+                      'https://images.unsplash.com/photo-1555952517-2e8e729e0b44?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                ),
+                Positioned(
+                    bottom: -10,
+                    left: 80,
+                    child: IconButton(
+                        onPressed: () {}, icon: const Icon(Icons.add_a_photo)))
+              ],
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+            //Text Field input for username
+            TextFieldInput(
+              hintText: 'Enter Your Username',
+              textInputType: TextInputType.emailAddress,
+              textEditingController: _usernameController,
+            ),
+            const SizedBox(
+              height: 24,
+            ),
             //Text Field input for email
             TextFieldInput(
               hintText: 'Enter Your Email',
@@ -56,10 +92,32 @@ class _LoginScreenState extends State<LoginScreen> {
               textInputType: TextInputType.text,
               textEditingController: _passwordController,
             ),
+            const SizedBox(
+              height: 24,
+            ),
+            //Text Field input for bio
+            TextFieldInput(
+              hintText: 'Enter Your Bio',
+              textInputType: TextInputType.emailAddress,
+              textEditingController: _bioController,
+            ),
+            const SizedBox(
+              height: 24,
+            ),
             const SizedBox(height: 24),
             // button login
             InkWell(
-              onTap: (){},
+              onTap: () async{
+                String res = await AuthMethods().signUpUser(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                    username: _usernameController.text,
+                    bio: _bioController.text,
+                    // file: 
+                    );
+                        print(res);
+              },
+          
               child: Container(
                 width: double.infinity,
                 alignment: Alignment.center,
@@ -68,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(4))),
                     color: blueColor),
-                child: const Text('Log in'),
+                child: const Text('Sign up'),
               ),
             ),
             const SizedBox(
@@ -85,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: const Text("Don;t have an account"),
                 ),
                 GestureDetector(
-                  onTap: (){},
+                  onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: const Text(
